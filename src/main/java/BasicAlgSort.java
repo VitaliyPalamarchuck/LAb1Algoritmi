@@ -7,13 +7,20 @@ public class BasicAlgSort <T extends Comparable<? super T>>{
     private int left;
     private int right;
     private T[] array;
+    boolean SortingFlag;
 
-    public BasicAlgSort(T[] array){ this.array=Arrays.copyOf(array, array.length);}
+    public BasicAlgSort(T[] array, boolean sortingFlag) {
+        this.array = Arrays.copyOf(array, array.length);
+        this.SortingFlag = sortingFlag;
+    }
 
-    public BasicAlgSort(int left, int right, T[] array) {
+
+
+    public BasicAlgSort(int left, int right, T[] array, boolean sortingFlag) {
         this.left = left;
         this.right = right;
-        this.array = Arrays.copyOfRange(array,left,right);
+        this.array = array;
+        this.SortingFlag = sortingFlag;
     }
 
     public T[] getArray(){return array;}
@@ -23,7 +30,7 @@ public class BasicAlgSort <T extends Comparable<? super T>>{
         while (flagForInteration){
             flagForInteration=false;
             for (int i =1; i<array.length;i++){
-                if(array[i].compareTo(array[i-1])<0){
+                if (SortingFlag ? array[i].compareTo(array[i - 1]) > 0 : array[i].compareTo(array[i - 1]) < 0){
                     swap(i, i-1);
                     if(!flagForInteration){
                         flagForInteration=true;
@@ -38,50 +45,50 @@ public class BasicAlgSort <T extends Comparable<? super T>>{
         array[leftIndex] = array[rightIndex];
         array[rightIndex]=temp;
     }
-    public void selectionSortAsc(){
+    public void selectionSortAsc() {
         for (int i = 0; i < array.length; i++) {
-            int minIndex=i;
-            T min=array[i];
-            for (int j = i+1; j < array.length; j++) {
-                if(array[j].compareTo(min)<0){
-                    min =array[j];
-                    minIndex=j;
+            int index = i;
+            T element = array[i];
+            for (int j = i + 1; j < array.length; j++) {
+                if (SortingFlag ? array[j].compareTo(element) > 0 : array[j].compareTo(element) < 0) {
+                    element = array[j];
+                    index = j;
                 }
             }
-            if (i!=minIndex) swap(i,minIndex);
+            if (i != index) {
+                swap(i, index);
+            }
         }
     }
 
-    public void insertionSortWithLinearSearchAsc(){
-        for(int i=1; i<array.length; i++){
-            T key =array[i];
-            int j = i;
-            for (; j>0;j--){
-                if(key.compareTo(array[j-1])<0){
-                    array[j]=array[j-1];
-                }else {
-                    break;
+    public void insertionSortWithLinearSearchAsc() {
+            for (int i = 1; i < array.length; i++) {
+                T key = array[i];
+                int j = i;
+                while (j > 0 && (SortingFlag ? key.compareTo(array[j - 1]) > 0 : key.compareTo(array[j - 1]) < 0)) {
+                    array[j] = array[j - 1];
+                    j--;
                 }
+                array[j] = key;
             }
-            array[j]=key;
-        }
     }
 
     public void insertionSortWithBinarySearchAsc(){
-        for (int i = 1; i < array.length; i++) { //поміняв 0 на 1, щоб не виходило за рамки
+        for (int i = 1; i < array.length; i++) {
             T key = array[i];
             int leftIndex = 0;
             int rightIndex = i-1;
-            if(key.compareTo(array[i-1])<0){
-                while (leftIndex <= rightIndex){ // поміняв < на <=
+            if (SortingFlag ? key.compareTo(array[i-1]) > 0 : key.compareTo(array[i-1]) < 0) {
+                while (leftIndex <= rightIndex){
                     int serIndex=(rightIndex+leftIndex)/2;
-                    if(key.compareTo(array[serIndex])<0){
-                        rightIndex=serIndex-1; // додав -1
+                    if(SortingFlag? key.compareTo(array[serIndex])>0:key.compareTo(array[serIndex])<0){
+                        rightIndex=serIndex-1;
                     }else{
                         leftIndex=serIndex+1;
                     }
                 }
-                for(int j = i; j >leftIndex ; j--) { //поміняв < на >
+
+                for(int j = i; j >leftIndex ; j--) {
                     array[j]=array[j-1];
                 }
                 array[leftIndex]=key;
@@ -89,6 +96,5 @@ public class BasicAlgSort <T extends Comparable<? super T>>{
 
         }
     }
-
 
 }
